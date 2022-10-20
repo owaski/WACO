@@ -12,7 +12,7 @@ Then run the following script to generate the yaml configuration file, tsv file,
 In this work, We jointly tokenize the bilingual text (En & X) using [SentencePiece](https://github.com/google/sentencepiece), with a
 vocabulary size of 10k. For example,
 ```bash
-python3 ConST/prepare_data/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type unigram --vocab-size 10000
+python3 WACO/prepare_data/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type unigram --vocab-size 10000
 ```
 
 You can get the directory like this,
@@ -50,7 +50,7 @@ data
 Apply the SentencePiece model, which is learned from MuST-C data, to the text files, and make binary data.
 Take En-De as an example,
 ```bash
-bash ConST/scripts/prepare_extra_mt.sh data/extra_mt data/spm_unigram10000_st de
+bash WACO/scripts/prepare_extra_mt.sh data/extra_mt data/spm_unigram10000_st de
 ```
 You can find all the binarized MT data under ```data/extra_mt/bin```.
 

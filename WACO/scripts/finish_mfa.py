@@ -12,7 +12,7 @@ import textgrids
 import numpy as np
 import torch as th
 
-from ConST.prepare_data.data_utils import load_df_from_tsv, save_df_to_tsv
+from WACO.prepare_data.data_utils import load_df_from_tsv, save_df_to_tsv
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data-root', type=str)

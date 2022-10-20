@@ -309,7 +309,7 @@ def validate_and_save(
                 logger.info(f" === Average checkpoint to {avg_ckpt_path}...")
                 try:
                     os.system(
-                        f"python3 ConST/scripts/average_checkpoints.py "
+                        f"python3 WACO/scripts/average_checkpoints.py "
                         f"--inputs {cfg.checkpoint.save_dir} "
                         f"--num-update-checkpoints 10 --checkpoint-upper-bound {updates} "
                         f"--output {avg_ckpt_path}")
