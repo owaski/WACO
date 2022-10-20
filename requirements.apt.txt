@@ -1,0 +1,8 @@
+make
+cmake
+zip
+tmux
+sox
+curl
+axel
+libsndfile1
