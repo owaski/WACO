@@ -1,4 +1,5 @@
-numpy
+jupyter
+praat-textgrids
 nltk
 tqdm
 pandas
@@ -15,7 +16,6 @@ soundfile
 sentencepiece
 pyarrow
 python_speech_features
-torchaudio
 sacrebleu==1.5.1
 omegaconf==2.0.5
 hydra-core==1.0.0

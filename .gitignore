@@ -156,3 +156,5 @@ cs291k/analysis/*
 events.out.tfevents.*
 *.pdf
 .vscode/launch.json
+
+tensorboard_logs/*

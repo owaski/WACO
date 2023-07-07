@@ -57,7 +57,7 @@ class MUSTC(Dataset):
                 segments[i][_lang] = u
         # Gather info
         self.data = []
-        for wav_filename, _seg_group in groupby(segments, lambda x: x["wav"]):
+        for wav_filename, _seg_group in tqdm(groupby(segments, lambda x: x["wav"])):
             wav_path = op.join(wav_root, wav_filename)
             relative_wav_path = op.relpath(wav_path, root)
             sample_rate = torchaudio.info(wav_path).sample_rate

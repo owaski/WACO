@@ -24,6 +24,7 @@ class LabelSmoothedCrossEntropyWithContrastiveTokenCriterion(LabelSmoothedCrossE
         ignore_prefix_size=0,
         report_accuracy=False,
         contrastive_level='token',
+        pooling='mean',
         cross_attention_num=10,
         ablation_type='ctc_cnn',
         ablation_weight=0.,
@@ -45,6 +46,7 @@ class LabelSmoothedCrossEntropyWithContrastiveTokenCriterion(LabelSmoothedCrossE
 
         self.contrastive_level = contrastive_level
         self.cross_attention_num = cross_attention_num
+        self.pooling = pooling
 
         self.enable_profiler = enable_profiler
 
@@ -59,6 +61,7 @@ class LabelSmoothedCrossEntropyWithContrastiveTokenCriterion(LabelSmoothedCrossE
                             help='which type of length to times to the contrastive loss')
         parser.add_argument('--contrastive-level', type=str, default="",
                             help='contrastive level, token/sentence/cross_attention')
+        parser.add_argument('--pooling', type=str, default='mean')
 
         parser.add_argument('--cross-attention-num', type=int, default=10)
 
@@ -144,7 +147,7 @@ class LabelSmoothedCrossEntropyWithContrastiveTokenCriterion(LabelSmoothedCrossE
         loss = torch.tensor(0.)
         sample_size = 0
 
-        static_model = self.task.static_model
+        static_model = getattr(self.task, "static_model", None)
 
         if sample["align_indices"].size(0) > 0:
 
@@ -505,8 +508,17 @@ class LabelSmoothedCrossEntropyWithContrastiveTokenCriterion(LabelSmoothedCrossE
                             s_l = int((s_l * s_len[i]).floor())
                             s_r = int((s_r * s_len[i]).ceil())
 
-                            t_feature = t_x[t_l : t_r + 1, i].mean(dim=0)
-                            s_feature = s_x[s_l : s_r + 1, i].mean(dim=0)
+                            if self.pooling == 'mean':
+                                t_feature = t_x[t_l : t_r + 1, i].mean(dim=0)
+                                s_feature = s_x[s_l : s_r + 1, i].mean(dim=0)
+                            elif self.pooling == 'max':
+                                t_feature = t_x[t_l : t_r + 1, i].max(dim=0)[0]
+                                s_feature = s_x[s_l : s_r + 1, i].max(dim=0)[0]
+                            elif self.pooling == 'sum':
+                                t_feature = t_x[t_l : t_r + 1, i].sum(dim=0)
+                                s_feature = s_x[s_l : s_r + 1, i].sum(dim=0)
+                            else:
+                                raise NotImplementedError
 
                             s_f.append(s_feature)
                             t_f.append(t_feature)

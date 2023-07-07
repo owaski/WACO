@@ -26,6 +26,211 @@ from fairseq.data.audio.feature_transforms import CompositeAudioFeatureTransform
 logger = logging.getLogger(__name__)
 
 
+flores_codes = [
+    "ace_Arab",
+    "ace_Latn",
+    "acm_Arab",
+    "acq_Arab",
+    "aeb_Arab",
+    "afr_Latn",
+    "ajp_Arab",
+    "aka_Latn",
+    "amh_Ethi",
+    "apc_Arab",
+    "arb_Arab",
+    "ars_Arab",
+    "ary_Arab",
+    "arz_Arab",
+    "asm_Beng",
+    "ast_Latn",
+    "awa_Deva",
+    "ayr_Latn",
+    "azb_Arab",
+    "azj_Latn",
+    "bak_Cyrl",
+    "bam_Latn",
+    "ban_Latn",
+    "bel_Cyrl",
+    "bem_Latn",
+    "ben_Beng",
+    "bho_Deva",
+    "bjn_Arab",
+    "bjn_Latn",
+    "bod_Tibt",
+    "bos_Latn",
+    "bug_Latn",
+    "bul_Cyrl",
+    "cat_Latn",
+    "ceb_Latn",
+    "ces_Latn",
+    "cjk_Latn",
+    "ckb_Arab",
+    "crh_Latn",
+    "cym_Latn",
+    "dan_Latn",
+    "deu_Latn",
+    "dik_Latn",
+    "dyu_Latn",
+    "dzo_Tibt",
+    "ell_Grek",
+    "eng_Latn",
+    "epo_Latn",
+    "est_Latn",
+    "eus_Latn",
+    "ewe_Latn",
+    "fao_Latn",
+    "pes_Arab",
+    "fij_Latn",
+    "fin_Latn",
+    "fon_Latn",
+    "fra_Latn",
+    "fur_Latn",
+    "fuv_Latn",
+    "gla_Latn",
+    "gle_Latn",
+    "glg_Latn",
+    "grn_Latn",
+    "guj_Gujr",
+    "hat_Latn",
+    "hau_Latn",
+    "heb_Hebr",
+    "hin_Deva",
+    "hne_Deva",
+    "hrv_Latn",
+    "hun_Latn",
+    "hye_Armn",
+    "ibo_Latn",
+    "ilo_Latn",
+    "ind_Latn",
+    "isl_Latn",
+    "ita_Latn",
+    "jav_Latn",
+    "jpn_Jpan",
+    "kab_Latn",
+    "kac_Latn",
+    "kam_Latn",
+    "kan_Knda",
+    "kas_Arab",
+    "kas_Deva",
+    "kat_Geor",
+    "knc_Arab",
+    "knc_Latn",
+    "kaz_Cyrl",
+    "kbp_Latn",
+    "kea_Latn",
+    "khm_Khmr",
+    "kik_Latn",
+    "kin_Latn",
+    "kir_Cyrl",
+    "kmb_Latn",
+    "kon_Latn",
+    "kor_Hang",
+    "kmr_Latn",
+    "lao_Laoo",
+    "lvs_Latn",
+    "lij_Latn",
+    "lim_Latn",
+    "lin_Latn",
+    "lit_Latn",
+    "lmo_Latn",
+    "ltg_Latn",
+    "ltz_Latn",
+    "lua_Latn",
+    "lug_Latn",
+    "luo_Latn",
+    "lus_Latn",
+    "mag_Deva",
+    "mai_Deva",
+    "mal_Mlym",
+    "mar_Deva",
+    "min_Latn",
+    "mkd_Cyrl",
+    "plt_Latn",
+    "mlt_Latn",
+    "mni_Beng",
+    "khk_Cyrl",
+    "mos_Latn",
+    "mri_Latn",
+    "zsm_Latn",
+    "mya_Mymr",
+    "nld_Latn",
+    "nno_Latn",
+    "nob_Latn",
+    "npi_Deva",
+    "nso_Latn",
+    "nus_Latn",
+    "nya_Latn",
+    "oci_Latn",
+    "gaz_Latn",
+    "ory_Orya",
+    "pag_Latn",
+    "pan_Guru",
+    "pap_Latn",
+    "pol_Latn",
+    "por_Latn",
+    "prs_Arab",
+    "pbt_Arab",
+    "quy_Latn",
+    "ron_Latn",
+    "run_Latn",
+    "rus_Cyrl",
+    "sag_Latn",
+    "san_Deva",
+    "sat_Beng",
+    "scn_Latn",
+    "shn_Mymr",
+    "sin_Sinh",
+    "slk_Latn",
+    "slv_Latn",
+    "smo_Latn",
+    "sna_Latn",
+    "snd_Arab",
+    "som_Latn",
+    "sot_Latn",
+    "spa_Latn",
+    "als_Latn",
+    "srd_Latn",
+    "srp_Cyrl",
+    "ssw_Latn",
+    "sun_Latn",
+    "swe_Latn",
+    "swh_Latn",
+    "szl_Latn",
+    "tam_Taml",
+    "tat_Cyrl",
+    "tel_Telu",
+    "tgk_Cyrl",
+    "tgl_Latn",
+    "tha_Thai",
+    "tir_Ethi",
+    "taq_Latn",
+    "taq_Tfng",
+    "tpi_Latn",
+    "tsn_Latn",
+    "tso_Latn",
+    "tuk_Latn",
+    "tum_Latn",
+    "tur_Latn",
+    "twi_Latn",
+    "tzm_Tfng",
+    "uig_Arab",
+    "ukr_Cyrl",
+    "umb_Latn",
+    "urd_Arab",
+    "uzn_Latn",
+    "vec_Latn",
+    "vie_Latn",
+    "war_Latn",
+    "wol_Latn",
+    "xho_Latn",
+    "ydd_Hebr",
+    "yor_Latn",
+    "yue_Hant",
+    "zho_Hans",
+    "zho_Hant",
+    "zul_Latn"
+]
+
 class S2TDataConfig(object):
     """Wrapper class for data config YAML"""
 
@@ -239,8 +444,13 @@ def _collate_frames(
     return out
 
 
-class SpeechToTextDataset(FairseqDataset):
+class SpeechToTextNLLBDataset(FairseqDataset):
     LANG_TAG_TEMPLATE = "<lang:{}>"
+
+    LANG2CODE = {
+        'mt': 'mlt_Latn',
+        'en': 'eng_Latn'
+    }
 
     def __init__(
         self,
@@ -258,8 +468,7 @@ class SpeechToTextDataset(FairseqDataset):
         tgt_dict: Optional[Dictionary] = None,
         pre_tokenizer=None,
         bpe_tokenizer=None,
-        mt_mode=False,
-        asr_mode=False,
+        mt_mode=False
     ):
         self.split, self.is_train_split = split, is_train_split
         self.data_cfg = data_cfg
@@ -290,7 +499,6 @@ class SpeechToTextDataset(FairseqDataset):
         self.bpe_tokenizer = bpe_tokenizer
 
         self.mt_mode = mt_mode
-        self.asr_mode = asr_mode
 
         logger.info(self.__repr__())
 
@@ -304,8 +512,7 @@ class SpeechToTextDataset(FairseqDataset):
 
     @classmethod
     def is_lang_tag(cls, token):
-        pattern = cls.LANG_TAG_TEMPLATE.replace("{}", "(.*)")
-        return re.match(pattern, token)
+        return token in flores_codes
 
     def check_tgt_lang_tag(self):
         if self.data_cfg.prepend_tgt_lang_tag and self.tgt_langs is not None:
@@ -342,10 +549,10 @@ class SpeechToTextDataset(FairseqDataset):
             src_text = self.tgt_dict.encode_line(
                 tokenized, add_if_not_exist=False, append_eos=True
             ).long()
-            if self.data_cfg.prepend_src_lang_tag:
-                lang_tag = self.LANG_TAG_TEMPLATE.format(self.src_langs[index])
+            if self.data_cfg.append_src_lang_tag:
+                lang_tag = self.LANG2CODE[self.src_langs[index]]
                 lang_tag_idx = self.tgt_dict.index(lang_tag)
-                src_text = torch.cat((torch.LongTensor([lang_tag_idx]), src_text), 0)
+                src_text = torch.cat((src_text, torch.LongTensor([lang_tag_idx])), 0)
             source = src_text
 
         target = None
@@ -355,7 +562,7 @@ class SpeechToTextDataset(FairseqDataset):
                 tokenized, add_if_not_exist=False, append_eos=True
             ).long()
             if self.data_cfg.prepend_tgt_lang_tag:
-                lang_tag = self.LANG_TAG_TEMPLATE.format(self.tgt_langs[index])
+                lang_tag = self.LANG2CODE[self.tgt_langs[index]]
                 lang_tag_idx = self.tgt_dict.index(lang_tag)
                 target = torch.cat((torch.LongTensor([lang_tag_idx]), target), 0)
         # print("__get_item__:", index, source.size(), target)
@@ -461,7 +668,7 @@ class SpeechToTextDataset(FairseqDataset):
         raise False
 
 
-class SpeechToTextDatasetCreator(object):
+class SpeechToTextNLLBDatasetCreator(object):
     # mandatory columns
     KEY_ID, KEY_AUDIO, KEY_N_FRAMES = "id", "audio", "n_frames"
     KEY_TGT_TEXT = "tgt_text"
@@ -481,9 +688,8 @@ class SpeechToTextDatasetCreator(object):
         tgt_dict,
         pre_tokenizer,
         bpe_tokenizer,
-        mt_mode,
-        asr_mode,
-    ) -> SpeechToTextDataset:
+        mt_mode
+    ) -> SpeechToTextNLLBDataset:
         audio_paths, n_frames, src_texts, tgt_texts, ids = [], [], [], [], []
         speakers, src_langs, tgt_langs = [], [], []
         for s in samples:
@@ -499,14 +705,7 @@ class SpeechToTextDatasetCreator(object):
             speakers.extend([ss.get(cls.KEY_SPEAKER, cls.DEFAULT_SPEAKER) for ss in s])
             src_langs.extend([ss.get(cls.KEY_SRC_LANG, cls.DEFAULT_LANG) for ss in s])
             tgt_langs.extend([ss.get(cls.KEY_TGT_LANG, cls.DEFAULT_LANG) for ss in s])
-
-        if asr_mode:
-            tgt_texts = src_texts
-            tgt_langs = src_langs
-            src_texts = None
-            src_langs = None
-            
-        return SpeechToTextDataset(
+        return SpeechToTextNLLBDataset(
             split_name,
             is_train_split,
             data_cfg,
@@ -522,7 +721,6 @@ class SpeechToTextDatasetCreator(object):
             pre_tokenizer,
             bpe_tokenizer,
             mt_mode,
-            asr_mode,
         )
 
     @classmethod
@@ -555,9 +753,8 @@ class SpeechToTextDatasetCreator(object):
         is_train_split: bool,
         epoch: int,
         seed: int,
-        mt_mode: bool,
-        asr_mode: bool
-    ) -> SpeechToTextDataset:
+        mt_mode: bool
+    ) -> SpeechToTextNLLBDataset:
         samples = []
         _splits = splits.split(",")
         for split in _splits:
@@ -586,7 +783,6 @@ class SpeechToTextDatasetCreator(object):
                 pre_tokenizer,
                 bpe_tokenizer,
                 mt_mode,
-                asr_mode,
             )
             for name, s in zip(_splits, samples)
         ]
@@ -616,7 +812,7 @@ if __name__ == "__main__":
     tgt_dict = Dictionary.load("data/spm_unigram10000_st.txt")
     print(tgt_dict)
     print(data_cfg)
-    dev_dataset = SpeechToTextDatasetCreator.from_tsv(
+    dev_dataset = SpeechToTextNLLBDatasetCreator.from_tsv(
         "./data",
         data_cfg,
         "dev_st",

@@ -371,6 +371,9 @@ def mbart_large_architecture(args):
     args.no_scale_embedding = getattr(args, "no_scale_embedding", False)
     bart_large_architecture(args)
 
+@register_model_architecture("bart", "denoising_large")
+def denoising_large_architecture(args):
+    mbart_large_architecture(args)
 
 @register_model_architecture("bart", "mbart_base")
 def mbart_base_architecture(args):

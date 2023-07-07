@@ -31,7 +31,11 @@ data
 └── MUSTC_v1.0_en-de.tar.gz
 ```
 
-## [optional] When using extra MT data
+## LibriSpeech Data Preparation
+
+TODO
+
+<!-- ## [optional] When using extra MT data
 We also provide script to pre-process the extra MT data, 
 and save the parallel data under ```${EXT_MT_DATA}``` (e.g.```./data/extra_mt```). 
 ```
@@ -56,4 +60,4 @@ You can find all the binarized MT data under ```data/extra_mt/bin```.
 
 ## Vocabualry for download
 
-TODO
+TODO -->

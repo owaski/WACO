@@ -350,15 +350,26 @@ class Wav2Vec2Model(BaseFairseqModel):
 
         if args.quantize_targets:
             vq_dim = args.latent_dim if args.latent_dim > 0 else final_dim
-            self.quantizer = GumbelVectorQuantizer(
-                dim=self.embed,
-                num_vars=args.latent_vars,
-                temp=eval(args.latent_temp),
-                groups=args.latent_groups,
-                combine_groups=False,
-                vq_dim=vq_dim,
-                time_first=True,
-            )
+            try:
+                self.quantizer = GumbelVectorQuantizer(
+                    dim=self.embed,
+                    num_vars=args.latent_vars,
+                    temp=eval(args.latent_temp),
+                    groups=args.latent_groups,
+                    combine_groups=False,
+                    vq_dim=vq_dim,
+                    time_first=True,
+                )
+            except:
+                self.quantizer = GumbelVectorQuantizer(
+                    dim=self.embed,
+                    num_vars=args.latent_vars,
+                    temp=args.latent_temp,
+                    groups=args.latent_groups,
+                    combine_groups=False,
+                    vq_dim=vq_dim,
+                    time_first=True,
+                )
             self.project_q = nn.Linear(vq_dim, final_dim)
         else:
             self.project_q = nn.Linear(self.embed, final_dim)
@@ -371,15 +382,26 @@ class Wav2Vec2Model(BaseFairseqModel):
                 vq_dim = (
                     args.latent_dim if args.latent_dim > 0 else args.encoder_embed_dim
                 )
-                self.input_quantizer = GumbelVectorQuantizer(
-                    dim=self.embed,
-                    num_vars=args.latent_vars,
-                    temp=eval(args.latent_temp),
-                    groups=args.latent_groups,
-                    combine_groups=False,
-                    vq_dim=vq_dim,
-                    time_first=True,
-                )
+                try:
+                    self.input_quantizer = GumbelVectorQuantizer(
+                        dim=self.embed,
+                        num_vars=args.latent_vars,
+                        temp=eval(args.latent_temp),
+                        groups=args.latent_groups,
+                        combine_groups=False,
+                        vq_dim=vq_dim,
+                        time_first=True,
+                    )
+                except:
+                    self.input_quantizer = GumbelVectorQuantizer(
+                        dim=self.embed,
+                        num_vars=args.latent_vars,
+                        temp=args.latent_temp,
+                        groups=args.latent_groups,
+                        combine_groups=False,
+                        vq_dim=vq_dim,
+                        time_first=True,
+                    )
             self.project_inp = nn.Linear(vq_dim, args.encoder_embed_dim)
 
         self.mask_emb = nn.Parameter(

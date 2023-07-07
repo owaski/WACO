@@ -7,3 +7,5 @@ from .berard import *  # noqa
 from .s2t_transformer import *  # noqa
 from .s2t_w2v2_transformer import *
 from .xstnet import *
+from .xstnet_mbart import *
+from .xstnet_nllb import *

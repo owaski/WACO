@@ -76,13 +76,6 @@ class S2TDataConfig(object):
         return self.config.get("bpe_tokenizer", {"bpe": None})
 
     @property
-    def append_src_lang_tag(self) -> bool:
-        """Prepend source lang ID token as the target BOS (e.g. for to-many
-        multilingual setting). During inference, this requires `--prefix-size 1`
-        to force BOS to be lang ID token."""
-        return self.config.get("append_src_lang_tag", False)
-
-    @property
     def prepend_src_lang_tag(self) -> bool:
         """Prepend source lang ID token as the target BOS (e.g. for to-many
         multilingual setting). During inference, this requires `--prefix-size 1`
@@ -239,7 +232,7 @@ def _collate_frames(
     return out
 
 
-class SpeechToTextDataset(FairseqDataset):
+class SpeechToTextMBARTDataset(FairseqDataset):
     LANG_TAG_TEMPLATE = "<lang:{}>"
 
     def __init__(
@@ -258,8 +251,7 @@ class SpeechToTextDataset(FairseqDataset):
         tgt_dict: Optional[Dictionary] = None,
         pre_tokenizer=None,
         bpe_tokenizer=None,
-        mt_mode=False,
-        asr_mode=False,
+        mt_mode=False
     ):
         self.split, self.is_train_split = split, is_train_split
         self.data_cfg = data_cfg
@@ -278,7 +270,7 @@ class SpeechToTextDataset(FairseqDataset):
         self.src_texts, self.tgt_texts = src_texts, tgt_texts
         self.src_langs, self.tgt_langs = src_langs, tgt_langs
         self.tgt_dict = tgt_dict
-        # self.check_tgt_lang_tag()
+        self.check_tgt_lang_tag()
         self.ids = ids
         self.shuffle = data_cfg.shuffle if is_train_split else False
 
@@ -290,9 +282,15 @@ class SpeechToTextDataset(FairseqDataset):
         self.bpe_tokenizer = bpe_tokenizer
 
         self.mt_mode = mt_mode
-        self.asr_mode = asr_mode
 
         logger.info(self.__repr__())
+
+    @classmethod
+    def get_lang_codes(cls, language_list_filename):
+        assert language_list_filename is not None
+        with open(language_list_filename, 'r') as r:
+            codes = [line.strip() for line in r.readlines() if line.strip() != ""]
+        return codes
 
     def __repr__(self):
         return (
@@ -461,7 +459,7 @@ class SpeechToTextDataset(FairseqDataset):
         raise False
 
 
-class SpeechToTextDatasetCreator(object):
+class SpeechToTextMBARTDatasetCreator(object):
     # mandatory columns
     KEY_ID, KEY_AUDIO, KEY_N_FRAMES = "id", "audio", "n_frames"
     KEY_TGT_TEXT = "tgt_text"
@@ -481,9 +479,8 @@ class SpeechToTextDatasetCreator(object):
         tgt_dict,
         pre_tokenizer,
         bpe_tokenizer,
-        mt_mode,
-        asr_mode,
-    ) -> SpeechToTextDataset:
+        mt_mode
+    ) -> SpeechToTextMBARTDataset:
         audio_paths, n_frames, src_texts, tgt_texts, ids = [], [], [], [], []
         speakers, src_langs, tgt_langs = [], [], []
         for s in samples:
@@ -491,6 +488,7 @@ class SpeechToTextDatasetCreator(object):
             audio_paths.extend(
                 [op.join(data_cfg.audio_root, ss[cls.KEY_AUDIO]) for ss in s]
             )
+            print(s[1])
             n_frames.extend([int(ss[cls.KEY_N_FRAMES]) for ss in s])
             tgt_texts.extend([ss[cls.KEY_TGT_TEXT] for ss in s])
             src_texts.extend(
@@ -499,14 +497,7 @@ class SpeechToTextDatasetCreator(object):
             speakers.extend([ss.get(cls.KEY_SPEAKER, cls.DEFAULT_SPEAKER) for ss in s])
             src_langs.extend([ss.get(cls.KEY_SRC_LANG, cls.DEFAULT_LANG) for ss in s])
             tgt_langs.extend([ss.get(cls.KEY_TGT_LANG, cls.DEFAULT_LANG) for ss in s])
-
-        if asr_mode:
-            tgt_texts = src_texts
-            tgt_langs = src_langs
-            src_texts = None
-            src_langs = None
-            
-        return SpeechToTextDataset(
+        return SpeechToTextMBARTDataset(
             split_name,
             is_train_split,
             data_cfg,
@@ -522,7 +513,6 @@ class SpeechToTextDatasetCreator(object):
             pre_tokenizer,
             bpe_tokenizer,
             mt_mode,
-            asr_mode,
         )
 
     @classmethod
@@ -555,9 +545,8 @@ class SpeechToTextDatasetCreator(object):
         is_train_split: bool,
         epoch: int,
         seed: int,
-        mt_mode: bool,
-        asr_mode: bool
-    ) -> SpeechToTextDataset:
+        mt_mode: bool
+    ) -> SpeechToTextMBARTDataset:
         samples = []
         _splits = splits.split(",")
         for split in _splits:
@@ -586,7 +575,6 @@ class SpeechToTextDatasetCreator(object):
                 pre_tokenizer,
                 bpe_tokenizer,
                 mt_mode,
-                asr_mode,
             )
             for name, s in zip(_splits, samples)
         ]
@@ -616,7 +604,7 @@ if __name__ == "__main__":
     tgt_dict = Dictionary.load("data/spm_unigram10000_st.txt")
     print(tgt_dict)
     print(data_cfg)
-    dev_dataset = SpeechToTextDatasetCreator.from_tsv(
+    dev_dataset = SpeechToTextMBARTDatasetCreator.from_tsv(
         "./data",
         data_cfg,
         "dev_st",

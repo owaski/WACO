@@ -4,14 +4,16 @@
 # LICENSE file in the root directory of this source tree.
 
 import logging
+import os
 import os.path as op
 from argparse import Namespace
 
 from fairseq.data import Dictionary, encoders
-from fairseq.data.audio.speech_to_text_dataset import (
+from fairseq.data.audio.speech_to_text_nllb_dataset import (
     S2TDataConfig,
-    SpeechToTextDataset,
-    SpeechToTextDatasetCreator,
+    flores_codes,
+    SpeechToTextNLLBDataset,
+    SpeechToTextNLLBDatasetCreator,
 )
 from fairseq.tasks import LegacyFairseqTask, register_task
 
@@ -19,8 +21,8 @@ from fairseq.tasks import LegacyFairseqTask, register_task
 logger = logging.getLogger(__name__)
 
 
-@register_task("speech_to_text")
-class SpeechToTextTask(LegacyFairseqTask):
+@register_task("speech_to_text_nllb")
+class SpeechToTextNLLBTask(LegacyFairseqTask):
     @staticmethod
     def add_args(parser):
         parser.add_argument("data", help="manifest root path")
@@ -51,8 +53,8 @@ class SpeechToTextTask(LegacyFairseqTask):
         )
 
         parser.add_argument(
-            '--asr-mode',
-            action='store_true'
+            '--nllb-dir',
+            type=str,
         )
 
     def __init__(self, args, tgt_dict):
@@ -63,13 +65,23 @@ class SpeechToTextTask(LegacyFairseqTask):
     @classmethod
     def setup_task(cls, args, **kwargs):
         data_cfg = S2TDataConfig(op.join(args.data, args.config_yaml))
-        dict_path = op.join(args.data, data_cfg.vocab_filename)
-        if not op.isfile(dict_path):
-            raise FileNotFoundError(f"Dict not found: {dict_path}")
-        tgt_dict = Dictionary.load(dict_path)
-        logger.info(
-            f"dictionary size ({data_cfg.vocab_filename}): " f"{len(tgt_dict):,}"
-        )
+
+        codes = flores_codes
+        def load_dict(vocab_filename):
+            _dict_path = op.join(args.data, vocab_filename)
+            if not op.isfile(_dict_path):
+                raise FileNotFoundError(f"Dict not found: {_dict_path}")
+            _dict = Dictionary.load(_dict_path)
+            for code in codes:
+                _dict.add_symbol(code)
+            _dict.add_symbol('<mask>')
+            _dict.add_symbol('<empty1>')
+            _dict.add_symbol('<empty2>')
+            return _dict
+
+        tgt_dict = load_dict(data_cfg.vocab_filename)
+        logger.info(f"dictionary size ({data_cfg.vocab_filename}): " f"{len(tgt_dict):,}")
+        src_dict = tgt_dict
 
         if getattr(args, "train_subset", None) is not None:
             if not all(s.startswith("train") for s in args.train_subset.split(",")):
@@ -90,7 +102,7 @@ class SpeechToTextTask(LegacyFairseqTask):
         is_train_split = split.startswith("train")
         pre_tokenizer = self.build_tokenizer(self.args)
         bpe_tokenizer = self.build_bpe(self.args)
-        self.datasets[split] = SpeechToTextDatasetCreator.from_tsv(
+        self.datasets[split] = SpeechToTextNLLBDatasetCreator.from_tsv(
             self.args.data,
             self.data_cfg,
             split,
@@ -100,8 +112,7 @@ class SpeechToTextTask(LegacyFairseqTask):
             is_train_split=is_train_split,
             epoch=epoch,
             seed=self.args.seed,
-            mt_mode=self.args.mt_mode,
-            asr_mode=self.args.asr_mode,
+            mt_mode=self.args.mt_mode
         )
 
     @property
@@ -118,7 +129,7 @@ class SpeechToTextTask(LegacyFairseqTask):
     def build_model(self, args):
         args.input_feat_per_channel = self.data_cfg.input_feat_per_channel
         args.input_channels = self.data_cfg.input_channels
-        return super(SpeechToTextTask, self).build_model(args)
+        return super(SpeechToTextNLLBTask, self).build_model(args)
 
     def build_generator(
         self,
@@ -135,7 +146,7 @@ class SpeechToTextTask(LegacyFairseqTask):
         lang_token_ids = {
             i
             for s, i in self.tgt_dict.indices.items()
-            if SpeechToTextDataset.is_lang_tag(s)
+            if s in flores_codes
         }
         extra_gen_cls_kwargs = {"symbols_to_strip_from_output": lang_token_ids}
         return super().build_generator(
@@ -152,4 +163,4 @@ class SpeechToTextTask(LegacyFairseqTask):
 
     @classmethod
     def build_dataset_for_inference(cls, audio_paths, n_frames):
-        return SpeechToTextDataset("interactive", False, {}, audio_paths, n_frames)
+        return SpeechToTextNLLBDataset("interactive", False, {}, audio_paths, n_frames)

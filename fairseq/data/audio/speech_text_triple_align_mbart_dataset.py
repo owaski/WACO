@@ -29,7 +29,7 @@ from fairseq.data.audio.speech_to_text_dataset import (
 logger = logging.getLogger(__name__)
 
 
-class SpeechTextTripleAlignDataset(SpeechToTextDataset):
+class SpeechTextTripleAlignMBARTDataset(SpeechToTextDataset):
     LANG_TAG_TEMPLATE = "<lang:{}>"
 
     def __init__(
@@ -64,13 +64,15 @@ class SpeechTextTripleAlignDataset(SpeechToTextDataset):
             self.dataset_type = "mt"
         self.check_src_lang_tag()
 
+    @classmethod
+    def get_lang_codes(cls, language_list_filename):
+        assert language_list_filename is not None
+        with open(language_list_filename, 'r') as r:
+            codes = [line.strip() for line in r.readlines() if line.strip() != ""]
+        return codes
+
     def check_src_lang_tag(self):
-        if self.data_cfg.prepend_src_lang_tag:
-            assert self.src_langs is not None and self.tgt_dict is not None
-            src_lang_tags = [
-                self.LANG_TAG_TEMPLATE.format(t) for t in set(self.src_langs)
-            ]
-            assert all(t in self.tgt_dict for t in src_lang_tags)
+        pass
 
     def __getitem__(
             self, index: int
@@ -277,7 +279,7 @@ class SpeechTextTripleAlignDataset(SpeechToTextDataset):
         return out
 
 
-class SpeechTextTripleAlignDatasetCreator(SpeechToTextDatasetCreator):
+class SpeechTextTripleAlignMBARTDatasetCreator(SpeechToTextDatasetCreator):
 
     KEY_SRC_PHONEME = 'src_phoneme'
     DEFAULT_SRC_PHONEME = ''
@@ -294,19 +296,17 @@ class SpeechTextTripleAlignDatasetCreator(SpeechToTextDatasetCreator):
             pre_tokenizer,
             bpe_tokenizer,
             use_pretrained_mfa,
-    ) -> SpeechTextTripleAlignDataset:
+    ) -> SpeechTextTripleAlignMBARTDataset:
         is_asr = 'asr' in split_name
         audio_paths, n_frames, src_texts, tgt_texts, ids = [], [], [], [], []
         speakers, src_langs, tgt_langs = [], [], []
         align_paths = []
         src_phonemes = []
 
-        if 'train' in split_name:
-            subdir = 'train'
-        elif 'dev' in split_name:
-            subdir = 'dev'
-        elif 'tst-COMMON' in split_name:
-            subdir = 'tst-COMMON'
+        if 'st' in split_name:
+            subdir = 'st'
+        elif 'asr' in split_name:
+            subdir = 'asr'
         else:
             raise NotImplementedError
 
@@ -327,7 +327,7 @@ class SpeechTextTripleAlignDatasetCreator(SpeechToTextDatasetCreator):
                 align_paths.extend(
                     [os.path.join(
                         data_cfg.audio_root, 
-                        '{}-{}'.format(ss[cls.KEY_SRC_LANG], ss[cls.KEY_TGT_LANG]), 
+                        '{}-{}'.format(ss[cls.KEY_SRC_LANG], 'en'), 
                         'data', subdir,
                         'align' if use_pretrained_mfa else 'align_mfat',
                         ss[cls.KEY_ID] + '.pt'
@@ -350,7 +350,7 @@ class SpeechTextTripleAlignDatasetCreator(SpeechToTextDatasetCreator):
         if is_asr:
             tgt_texts = tgt_langs = None
 
-        return SpeechTextTripleAlignDataset(
+        return SpeechTextTripleAlignMBARTDataset(
             split_name,
             is_train_split,
             data_cfg,
@@ -384,7 +384,7 @@ class SpeechTextTripleAlignDatasetCreator(SpeechToTextDatasetCreator):
             epoch: int,
             seed: int,
             use_pretrained_mfa: bool
-    ) -> SpeechTextTripleAlignDataset:
+    ) -> SpeechTextTripleAlignMBARTDataset:
         samples = []
         _splits = splits.split(",")
         for split in _splits:
