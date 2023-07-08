@@ -150,8 +150,8 @@ cs291k/analysis/*
 
 *.wav
 *.npy
-*.html
-*.png
+# *.html
+# *.png
 *.pyc
 events.out.tfevents.*
 # *.pdf

@@ -20,7 +20,7 @@ End-to-end speech translation (E2E ST) is the task of translating speech in one 
 
 For those who are not familiar with ST, a typical parallel ST data point consists of a source speech waveform, its transcript and target translation. We usually count the amount of parallel ST data using the number of hours of speech. For example, the most widely used dataset MuST-C contains around 400 hours of speech (~225k data points) for English-German direction. By scarce, we mean the amount of parallel ST data is less than 10 hours, e.g., Maltese-English direction in [IWSLT 2023](https://iwslt.org/2023/low-resource).
 
-## What did we find?
+## Why word-level alignment is important for E2E ST?
 
 We analyzed the representatinon learned by existing E2E ST models and observed two important phenomena:
 1. The average representations from speech and its transcript are similar at the sequence level but misaligned at the word level. Ideally as shown in below left figure, we want the representations of each word to be aligned.
@@ -47,3 +47,5 @@ We analyzed the representatinon learned by existing E2E ST models and observed t
 </div> -->
 
 These two phenomea together indicate that **word-level alignment could be the key to improve the performance of E2E ST models in low-resource settings.**
+
+## How we improve word-level alignment for E2E ST models?
