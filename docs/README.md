@@ -12,7 +12,7 @@ Siqi Ouyang<sup>1</sup>, Rong Ye<sup>2</sup>, Lei Li<sup>1</sup>
 End-to-end speech translation (E2E ST) is the task of translating speech in one language to text in another language without generating intermediate transcript. E2E ST holds the hope for lower latency and less error propagation compared to cascade system with automatic speech recognition (ASR) and machine translation (MT). **However, just like other E2E models, the performance of existing E2E ST models is still far from satisfactory when parallel data is scarce.**
 
 <div style="text-align: center;">
-<embed src="figures/E2E_ST.pdf" type="application/pdf" width="70%"/>
+<object data="figures/E2E_ST.pdf" type="application/pdf" width="70%"></object>
 </div>
 
 For those who are not familiar with ST, a typical parallel ST data point consists of a source speech waveform, its transcript and target translation. We usually count the amount of parallel ST data using the number of hours of speech. For example, the most widely used dataset MuST-C contains around 400 hours of speech (~225k data points) for English-German direction. By scarce, we mean the amount of parallel ST data is less than 10 hours, e.g., Maltese-English direction in [IWSLT 2023](https://iwslt.org/2023/low-resource).
@@ -25,14 +25,14 @@ We analyzed the representatinon learned by existing E2E ST models and observed t
 
 <div style="text-align: center;">
     <figure>
-        <embed src="figures/intro_example1.pdf" type="application/pdf" width="25%"/>
+        <object data="figures/intro_example1.pdf" type="application/pdf" width="25%"></object>
         <figcaption>Existing</figcaption>
     </figure>
     <figure>
-        <embed src="figures/intro_example2.pdf" type="application/pdf" width="25%"/>
+        <object data="figures/intro_example2.pdf" type="application/pdf" width="25%"></object>
         <figcaption>Ideal</figcaption>
     </figure>
-    <embed src="figures/bleu_data_2.pdf" type="application/pdf" width="30%"/>
+    <object data="figures/bleu_data_2.pdf" type="application/pdf" width="30%"></object>
 </div>
 
 <!-- <div style="text-align: center;">
