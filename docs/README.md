@@ -1,10 +1,10 @@
-# WACO: Word-Aligned Contrastive Learning for Speech Translation
+<!-- # WACO: Word-Aligned Contrastive Learning for Speech Translation
 
 Siqi Ouyang<sup>1</sup>, Rong Ye<sup>2</sup>, Lei Li<sup>1</sup>
 
 <sup>1</sup>University of California, Santa Barbara, <sup>2</sup>Bytedance
 
-\[[Arxiv](https://arxiv.org/abs/2212.09359)\] \[[Code](https://github.com/owaski/WACO)\]
+\[[Arxiv](https://arxiv.org/abs/2212.09359)\] \[[Code](https://github.com/owaski/WACO)\] -->
 
 ## What is End-to-End Speech Translation and its core challenge?
 
