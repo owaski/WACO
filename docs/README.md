@@ -43,7 +43,7 @@ Specifically, we measure the cosine similarity between outputs of speech encoder
 2. Word-level misalignment is more severe in low-resource settings. In the below figure, we trained an existing E2E ST model on 1/5/10/388 hours of parallel data and plotted the average cosine similarity between the representations of each word in speech and its transcript. We can see that the word-level alignment is worse as we decreases the amount of parallel training data and so is the translation performance.
 <div style="text-align: center;">
     <figure>
-        <img src="figures/bleu_data_2.png" width="30%" />
+        <img src="figures/bleu_data_2.png" width="50%" />
     <figure>
 </div>
 
@@ -68,7 +68,7 @@ With the time range of each word in speech, we can pass the entire speech wavefo
 
 <div style="text-align: center;">
     <figure>
-        <img src="figures/word-rep.png" width="81%" />
+        <img src="figures/word-rep.png" width="100%" />
     <figure>
 </div>
 
@@ -78,11 +78,11 @@ Once we have the representations of words, we can align them accordingly. The hi
 
 <div style="text-align: center;">
     <figure>
-        <img src="figures/waco.png" width="81%" />
+        <img src="figures/waco.png" width="100%" />
     <figure>
 </div>
 
-Formally, denote the text representation of $i_{th}$ word as $f_i^t$ and speech representation of that as $f_i^t$. Let $\mathcal{B}$ be the current training batch, then the word-aligned contrastive loss is defined as:
+Formally, denote the text representation of \(i_{th}\) word as \(f_i^t\) and speech representation of that as \(f_i^t\). Let \(\mathcal{B}\) be the current training batch, then the word-aligned contrastive loss is defined as:
 $$
 \ell_\text{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]
 $$
@@ -110,13 +110,19 @@ The baselines we compared with are (1) W2V2-Transformer: no cross-modal alignmen
 
 ### WACO works without pre-trained speech encoder
 
-Another interesting finding is that WACO does not require a well-pretrained speech encoder such as wav2vec 2.0[3] to work. We ablate the pre-training of speech encoder and the results are shown below. WACO's result is nearly unaffected ($\pm0.2$ at most), while the performance of cascade ST (a typical ST method used in low-resource setting) drops significantly without speech pre-training.
+Another interesting finding is that WACO does not require a well-pretrained speech encoder such as wav2vec 2.0[3] to work. We ablate the pre-training of speech encoder and the results are shown below. WACO's result is nearly unaffected (\(\pm0.2\) at most), while the performance of cascade ST (a typical ST method used in low-resource setting) drops significantly without speech pre-training.
 
 <div style="text-align: center;">
     <figure>
         <img src="figures/exp-w2v2.png" width="50%" />
     <figure>
 </div>
+
+
+## Case Study: Word-level alignment works better than sentence-level alignment
+
+We also conducted a case study to show that word-level alignment works better than sentence-level alignment. 
+
 
 
 
