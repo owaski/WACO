@@ -7,3 +7,6 @@ plugins:
 title: ["WACO: Word-Aligned Contrastive Learning for Speech Translation"]
 description: ["Siqi Ouyang<sup>1</sup>, Rong Ye<sup>2</sup>, Lei Li<sup>1</sup><br>
 <sup>1</sup>UC Santa Barbara, <sup>2</sup>Bytedance"]
+
+show_arxiv: "true"
+arxiv: "https://arxiv.org/abs/2212.09359"
