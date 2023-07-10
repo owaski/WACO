@@ -87,7 +87,9 @@ $$\ell_\text{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\l
 
 ### A few more words of underlying mechanism
 
-As you may have noticed, word-aligned contrastive loss only requires speech waveform and its transcript, i.e., ASR data, and we usually have a lot more ASR data than parallel ST data. On the other hand, we have a magnitude more of MT data than parallel ST data, so it is a common practice to pre-train the text embedding and the joint transformer encoder-decoder on external MT data. By using both MT and ASR data, WACO aligns the speech encoder outputs word-by-word to the pre-trained text embedding outputs. From this perspective, WACO can also be viewed as a form of fine-grained knowledge distillation. 
+As you may have noticed, word-aligned contrastive loss only requires speech waveform and its transcript, i.e., ASR data, and we usually have a lot more ASR data than parallel ST data. Note that we use the same ASR data to train the forced aligner and our model to ensure a true low-resource setting.
+
+On the other hand, we have a magnitude more of MT data than parallel ST data, so it is a common practice to pre-train the text embedding and the joint transformer encoder-decoder on external MT data. By using both MT and ASR data, WACO aligns the speech encoder outputs word-by-word to the pre-trained text embedding outputs. From this perspective, WACO can also be viewed as a form of fine-grained knowledge distillation. 
 
 To wrap up, the training recipe we adopted is tri-stage: (1) pre-train the text embedding and the joint transformer encoder-decoder on external MT data, and (optionally) pre-train the speech encoder on raw speech with self-supervised method[3]; (2) apply word-aligned contrastive loss on ASR data to align speech encoder outputs to the pre-trained text embedding outputs; (3) fine-tune the entire model on parallel ST data with standard cross-entropy loss.
 
@@ -119,9 +121,21 @@ Another interesting finding is that WACO does not require a well-pretrained spee
 
 ## Case Study: Word-level alignment works better than sentence-level alignment
 
-To give you a more concrete sense of how word-level alignment helps translation, we conducted a case study. 
+To give you a more concrete sense of how word-level alignment helps translation, we conducted a case study. The speech utterance is "The first is that we will not evolve". We passed them through models trained with both ConST (sentence-level method) and WACO (word-level method), and visualized the alignment matrix word-by-word, together with their translation in the bottom.
 
+<div style="text-align: center;">
+    <figure>
+        <img src="figures/case.png" width="100%" />
+    <figure>
+</div>
 
+As you can see, comparing the matrices of ConST and WACO, ConST misaligns words "that" and "evolve" in the source utterance. As a result, the translation of ConST uses the wrong connection word "and" instead of "that" and missed the verb "evolve". On the other hand, WACO aligns the words correctly and the translation is correct. We also have quantitative results on the alignment accuracy in the paper. Feel free to check them out. 
+
+## What we did so far and what could be done in the future
+
+We developed WACO and it works well on low-resource ST tasks. The core idea is to align the speech encoder outputs to the pre-trained text embedding outputs in a fine-grained way. Various experiments show that WACO is effective and robust, and demonstrate a potentially general solution to low-resource cross-modal tasks.
+
+Such fine-grained alignment may not only work in offline speech translation, it could also improve streaming speech translation as it provides a more accurate word-level alignment between speech and text, from which the streaming ST model can benefit more from a streaming MT model. We are currently working on this direction and will release the result soon. Stay tuned!
 
 
 ## References
