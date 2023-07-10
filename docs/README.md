@@ -82,10 +82,8 @@ Once we have the representations of words, we can align them accordingly. The hi
     <figure>
 </div>
 
-Formally, denote the text representation of \(i_{th}\) word as \(f_i^t\) and speech representation of that as \(f_i^t\). Let \(\mathcal{B}\) be the current training batch, then the word-aligned contrastive loss is defined as:
-$$
-\ell_\text{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]
-$$
+Formally, denote the text representation of $i_{th}$ word as $f_i^t$ and speech representation of that as $f_i^t$. Let $\mathcal{B}$ be the current training batch, then the word-aligned contrastive loss is defined as:
+$$\ell_\text{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]$$
 
 ### A few more words of underlying mechanism
 
@@ -110,7 +108,7 @@ The baselines we compared with are (1) W2V2-Transformer: no cross-modal alignmen
 
 ### WACO works without pre-trained speech encoder
 
-Another interesting finding is that WACO does not require a well-pretrained speech encoder such as wav2vec 2.0[3] to work. We ablate the pre-training of speech encoder and the results are shown below. WACO's result is nearly unaffected (\(\pm0.2\) at most), while the performance of cascade ST (a typical ST method used in low-resource setting) drops significantly without speech pre-training.
+Another interesting finding is that WACO does not require a well-pretrained speech encoder such as wav2vec 2.0[3] to work. We ablate the pre-training of speech encoder and the results are shown below. WACO's result is nearly unaffected ($\pm0.2$ at most), while the performance of cascade ST (a typical ST method used in low-resource setting) drops significantly without speech pre-training.
 
 <div style="text-align: center;">
     <figure>
@@ -121,7 +119,7 @@ Another interesting finding is that WACO does not require a well-pretrained spee
 
 ## Case Study: Word-level alignment works better than sentence-level alignment
 
-We also conducted a case study to show that word-level alignment works better than sentence-level alignment. 
+To give you a more concrete sense of how word-level alignment helps translation, we conducted a case study. 
 
 
 
