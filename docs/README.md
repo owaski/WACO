@@ -82,9 +82,7 @@ Once we have the representations of words, we can align them accordingly. The hi
     <figure>
 </div>
 
-Formally, denote the text representation of $i_{th}$ word as $f_i^t$ and speech representation of that as $f_i^t$. Let $\mathcal{B}$ be the current training batch, then the word-aligned contrastive loss is defined as:
-
-$\ell_\mathrm{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]$
+Formally, denote the text representation of $i_{th}$ word as $f_i^t$ and speech representation of that as $f_i^t$. Let $\mathcal{B}$ be the current training batch, then the word-aligned contrastive loss is defined as: $\ell_\mathrm{CTR}(\mathcal{B}) = -\mathbb{E}_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]$
 
 ### A few more words of underlying mechanism
 
