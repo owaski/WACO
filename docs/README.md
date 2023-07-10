@@ -86,6 +86,8 @@ Formally, denote the text representation of $i_{th}$ word as $f_i^t$ and speech 
 
 $$\ell_\mathrm{CTR}(\mathcal{B}) = -\mathbb{E}\_{f_i^s,f_i^t\in\mathcal{B}}\left[\log\frac{\exp(sim(f_i^s, f_i^t)/\tau)}{\sum\_{f_{j\neq i}^t}\exp(sim(f_i^s, f_j^t)/\tau)}\right]$$
 
+where $sim$ is the cosine similarity and $\tau$ is the temperature controlling the sharpness of the distribution, or equivalently, how much we want to push the representations of the same word closer.
+
 ### A few more words of underlying mechanism
 
 As you may have noticed, word-aligned contrastive loss only requires speech waveform and its transcript, i.e., ASR data, and we usually have a lot more ASR data than parallel ST data. Note that we use the same ASR data to train the forced aligner and our model to ensure a true low-resource setting.
