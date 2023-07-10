@@ -6,6 +6,20 @@ Siqi Ouyang<sup>1</sup>, Rong Ye<sup>2</sup>, Lei Li<sup>1</sup>
 
 \[[Arxiv](https://arxiv.org/abs/2212.09359)\] \[[Code](https://github.com/owaski/WACO)\] -->
 
+**Table of Contents**
+- [What is End-to-End Speech Translation and its core challenge?](#what-is-end-to-end-speech-translation-and-its-core-challenge)
+- [Why word-level alignment is important for low-resource E2E ST?](#why-word-level-alignment-is-important-for-low-resource-e2e-st)
+- [How we improve word-level alignment for E2E ST models](#how-we-improve-word-level-alignment-for-e2e-st-models)
+    - [Extract word-level representations](#extract-word-level-representations)
+    - [Word-Aligned Contrastive Loss](#word-aligned-contrastive-loss)
+    - [A few more words of underlying mechanism](#a-few-more-words-of-underlying-mechanism)
+- [Experiments](#experiments)
+    - [WACO excels in low-resource ST](#waco-excels-in-low-resource-st)
+    - [WACO works without pre-trained speech encoder](#waco-works-without-pre-trained-speech-encoder)
+- [Case Study: Word-level alignment works better than sentence-level alignment](#case-study-word-level-alignment-works-better-than-sentence-level-alignment)
+- [What we did so far and what could be done in the future](#what-we-did-so-far-and-what-could-be-done-in-the-future)
+- [References](#references)
+
 ## What is End-to-End Speech Translation and its core challenge?
 
 End-to-end speech translation (E2E ST) is the task of translating speech in one language to text in another language without generating intermediate transcript. E2E ST holds the hope for lower latency and less error propagation compared to cascade ST with automatic speech recognition (ASR) and machine translation (MT). **However, just like other E2E models, the performance of existing E2E ST models is still far from satisfactory when parallel data is scarce.**
