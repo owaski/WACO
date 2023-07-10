@@ -1,6 +1,8 @@
 # WACO: Word-Aligned Contrastive Learning for Speech Translation
 
-This repository contains the code for the paper [WACO: Word-Aligned Contrastive Learning for Speech Translation](https://arxiv.org/abs/2212.09359). The repo is still under development.
+\[[Project Page](https://owaski.github.io/WACO/)\] \[[Arxiv](https://arxiv.org/abs/2212.09359)\]
+
+This repository contains the code for the paper **WACO: Word-Aligned Contrastive Learning for Speech Translation**. The repo is still under development.
 
 ## Training & Inference Instruction
 
