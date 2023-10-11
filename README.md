@@ -32,13 +32,13 @@ Then run the following script to generate the yaml configuration file, tsv file,
 ```bash
 python WACO/prepare_data/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type unigram --vocab-size 10000
 ```
-We also provide the prepared configs, tsvs and dictionaries [here](https://www.dropbox.com/scl/fo/8lyhb9h3z2m2yn7wkuebv/h?rlkey=z0dp2m73br7t5np1q1afzxzy5&dl=0) for convenience. 
+We also provide the prepared configs, tsvs and dictionaries [here](https://www.dropbox.com/scl/fo/gwzqk016pszwudxu1hpsz/h?rlkey=xn5akktmzu43b3cjw2wotnoul&dl=0) for convenience. 
 
 
 #### IWSLT23 Maltese-English Data Preparation
 
 Please follow the instructions in jupyter notebook `WACO/prepare_data/prepare_mt_en.ipynb` to create Mt-En data from IWSLT23 and CommonVoice.
-We also provide the processed data and tsvs [here](https://www.dropbox.com/scl/fo/8lyhb9h3z2m2yn7wkuebv/h?rlkey=z0dp2m73br7t5np1q1afzxzy5&dl=0). Note the dictionary is from NLLB since we use NLLB as pre-trained MT checkpoint for Mt-En translation.
+We also provide the processed data and tsvs [here](https://www.dropbox.com/scl/fo/6799mtjvf5hmja8prwena/h?rlkey=t31x8ussd7dejzclpjeuc3qro&dl=0). Note the dictionary is from NLLB since we use NLLB as pre-trained MT checkpoint for Mt-En translation.
 
 ### Forced Alignment
 
