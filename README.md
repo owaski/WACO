@@ -53,6 +53,8 @@ bash WACO/train/waco/waco_de_10h.sh # for must-c en-de 10h asr
 bash WACO/train/waco/waco_mt_10h.sh # for iwslt mt-en 10h asr
 ```
 
+We also provide the pre-trained WACO checkpoints [here](https://www.dropbox.com/scl/fo/fj9ylr8up8x4cxidexq1p/h?rlkey=mv1reocfdxyi66paayrie07fr&dl=0) for convenience.
+
 #### Multitask Finetuning
 
 ```bash
