@@ -32,13 +32,13 @@ Then run the following script to generate the yaml configuration file, tsv file,
 ```bash
 python WACO/prepare_data/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type unigram --vocab-size 10000
 ```
-We also provide the prepared configs, tsvs and dictionaries [here]() for convenience. 
+We also provide the prepared configs, tsvs and dictionaries [here](https://www.dropbox.com/scl/fo/8lyhb9h3z2m2yn7wkuebv/h?rlkey=z0dp2m73br7t5np1q1afzxzy5&dl=0) for convenience. 
 
 
 #### IWSLT23 Maltese-English Data Preparation
 
 Please follow the instructions in jupyter notebook `WACO/prepare_data/prepare_mt_en.ipynb` to create Mt-En data from IWSLT23 and CommonVoice.
-We also provide the processed data and tsvs [here](). Note the dictionary is from NLLB since we use NLLB as pre-trained MT checkpoint for Mt-En translation.
+We also provide the processed data and tsvs [here](https://www.dropbox.com/scl/fo/8lyhb9h3z2m2yn7wkuebv/h?rlkey=z0dp2m73br7t5np1q1afzxzy5&dl=0). Note the dictionary is from NLLB since we use NLLB as pre-trained MT checkpoint for Mt-En translation.
 
 ### Forced Alignment
 
@@ -53,7 +53,7 @@ bash WACO/train/waco/waco_de_10h.sh # for must-c en-de 10h asr
 bash WACO/train/waco/waco_mt_10h.sh # for iwslt mt-en 10h asr
 ```
 
-We also provide the pre-trained WACO checkpoints [here](https://www.dropbox.com/scl/fo/fj9ylr8up8x4cxidexq1p/h?rlkey=mv1reocfdxyi66paayrie07fr&dl=0) for convenience.
+We also provide the pre-trained WACO checkpoints [here](https://www.dropbox.com/scl/fo/8lyhb9h3z2m2yn7wkuebv/h?rlkey=z0dp2m73br7t5np1q1afzxzy5&dl=0) for convenience.
 
 #### Multitask Finetuning
 
